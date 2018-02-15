@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import os
+import sys
+import random
+
+def Get_script_path():
+  return os.path.dirname(os.path.realpath(sys.argv[0]))
+
+def Generate_name(first_name_array,last_name_array):
+  first_name_index=random.randint(0,len(first_name_array))
+  last_name_index=random.randint(0,len(last_name_array))
+  return first_name_array[first_name_index], last_name_array[last_name_index]
+
+def Find_wordlists():
+  first_name_array=[]
+  last_name_array=[]
+  wordlists=[]
+  for(dirpath,dirnames,filenames) in os.walk(Get_script_path()):
+    wordlists.extend(filenames)
+    break
+  for wordlist in wordlists:
+    if wordlist[-4:] == 'last':
+      with open(wordlist,'r') as f:
+        last_name_array.extend(f.read().splitlines())
+    elif wordlist[-5:] == 'first':
+      with open(wordlist,'r') as f:
+        first_name_array.extend(f.read().splitlines())
+  return first_name_array,last_name_array
+
+def main():
+  first_name_array, last_name_array = Find_wordlists()
+  name=Generate_name(first_name_array, last_name_array)
+  print(name[0]+", "+name[1])
+
+if __name__ == '__main__':
+  main()
